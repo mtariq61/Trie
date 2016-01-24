@@ -3,12 +3,12 @@ Use Maven to build and test.
 
 To build:
 
-`mvn clean package`
+    mvn clean package
 
 To install:
 
-`mvn clean install`
+    mvn clean install
 
 To run default test suite:
 
-`mvn clean test`
+    mvn clean test
