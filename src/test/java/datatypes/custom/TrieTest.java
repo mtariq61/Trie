@@ -11,11 +11,11 @@ import java.util.Set;
  */
 public class TrieTest {
 
-    private Trie rootNode;
+    private Trie<Integer> rootNode;
 
     @Before
     public void init(){
-        rootNode = new Trie();
+        rootNode = new Trie<Integer>();
     }
 
     @Test
@@ -71,7 +71,7 @@ public class TrieTest {
         rootNode.put("secondKey", 2);
 
 
-        Trie test = new Trie();
+        Trie<Integer> test = new Trie<Integer>();
         test.putAll(rootNode);
         Assert.assertTrue(test.containsKey("keySpace"));
     }

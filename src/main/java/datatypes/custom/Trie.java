@@ -1,16 +1,14 @@
 package datatypes.custom;
 
 
-import java.security.InvalidKeyException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * A custom implementation of Prefix Tree (known as Trie). It implements all general methods of a Key Pair store, similar to
  * a Map.
  */
-public class Trie {
+public class Trie<T> {
 
     /**
      * Total count of elements in subtree
@@ -23,11 +21,11 @@ public class Trie {
     /**
      * Subtree of this Node
      */
-    private Trie[] subtree;
+    private Trie<T>[] subtree;
     /**
-     * Value of this Node. For sake of simplicity, for now, this trie can only hold integer values.
+     * Value of this Node
      */
-    private Integer value;
+    private T value;
 
     private final int SUBTREE_LENGTH = 94; // Number of printable ascii characters
 
@@ -41,6 +39,11 @@ public class Trie {
         // times. That would be a compromise of performance over memory. But for realtime applications I choose performance
         // and compromise over memory.
         this.subtree = new Trie[this.SUBTREE_LENGTH];
+    }
+
+    @SuppressWarnings("unused")
+    public T getValue(){
+        return this.value;
     }
 
     public int size() {
@@ -65,14 +68,14 @@ public class Trie {
         }
     }
 
-    public boolean containsValue(Integer value) {
+    public boolean containsValue(T value) {
         if (value == null) {
             throw new IllegalArgumentException("Value can not be null");
         }
         if (value.equals(this.value)) {
             return true;
         }
-        for (Trie entry : subtree) {
+        for (Trie<T> entry : subtree) {
             if (entry != null) {
                 if (entry.containsValue(value)) return true;
             }
@@ -80,7 +83,7 @@ public class Trie {
         return false;
     }
 
-    public Integer get(CharSequence key) {
+    public T get(CharSequence key) {
         if (key == null || key.length() == 0) {
             throw new IllegalArgumentException("Key length should be at least one character");
         }
@@ -95,15 +98,15 @@ public class Trie {
         return subtree[index].get(key.subSequence(1, key.length()));
     }
 
-    public Integer put(CharSequence key, Integer value) {
+    public T put(CharSequence key, T value) {
         if (key == null || key.length() == 0) {
             throw new IllegalArgumentException("Key length should be at least one character");
         }
-        Integer toReturn;
+        T toReturn;
         this.count++;
         int index = this.getIndexFromASCII(key.charAt(0));
         if (subtree[index] == null) {
-            subtree[index] = new Trie();
+            subtree[index] = new Trie<T>();
         }
         subtree[index].prefix = key.charAt(0);
         if (key.length() == 1) {
@@ -116,11 +119,11 @@ public class Trie {
         return toReturn;
     }
 
-    public Integer remove(CharSequence key) {
+    public T remove(CharSequence key) {
         if (key == null || key.length() == 0) {
             throw new IllegalArgumentException("Key length should be at least one character");
         }
-        Integer toReturn = null;
+        T toReturn = null;
         this.count--;
         int index = this.getIndexFromASCII(key.charAt(0));
         if (subtree[index] != null) {
@@ -138,7 +141,7 @@ public class Trie {
         return toReturn;
     }
 
-    public void putAll(Trie t) {
+    public void putAll(Trie<T> t) {
         Set<CharSequence> keySet = t.keySet();
         for (CharSequence key : keySet) {
             this.put(key, t.get(key));
@@ -152,7 +155,7 @@ public class Trie {
 
     public Set<CharSequence> keySet() {
         Set<CharSequence> keySet = new HashSet<CharSequence>();
-        for (Trie entry : subtree) {
+        for (Trie<T> entry : subtree) {
             Set<CharSequence> entryKeySet;
             if (entry != null) {
                 entryKeySet = entry.keySet();
